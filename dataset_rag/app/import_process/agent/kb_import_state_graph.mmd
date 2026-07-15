@@ -1,0 +1,28 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	node_entry(node_entry)
+	node_pdf_to_md(node_pdf_to_md)
+	node_md_img(node_md_img)
+	node_document_split(node_document_split)
+	node_item_name_recognition(node_item_name_recognition)
+	node_bge_embedding(node_bge_embedding)
+	node_import_milvus(node_import_milvus)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> node_entry;
+	node_bge_embedding --> node_import_milvus;
+	node_document_split --> node_item_name_recognition;
+	node_entry -.-> __end__;
+	node_entry -.-> node_md_img;
+	node_entry -.-> node_pdf_to_md;
+	node_item_name_recognition --> node_bge_embedding;
+	node_md_img --> node_document_split;
+	node_pdf_to_md --> node_md_img;
+	node_import_milvus --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

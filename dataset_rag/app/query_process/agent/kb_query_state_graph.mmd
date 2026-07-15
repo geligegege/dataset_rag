@@ -1,0 +1,29 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	node_item_name_confirm(node_item_name_confirm)
+	node_search_embedding(node_search_embedding)
+	node_search_embedding_hyde(node_search_embedding_hyde)
+	node_web_search_mcp(node_web_search_mcp)
+	node_rrf(node_rrf)
+	node_rerank(node_rerank)
+	node_answer_output(node_answer_output)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> node_item_name_confirm;
+	node_item_name_confirm -.-> node_answer_output;
+	node_item_name_confirm -.-> node_search_embedding;
+	node_item_name_confirm -.-> node_search_embedding_hyde;
+	node_item_name_confirm -.-> node_web_search_mcp;
+	node_rerank --> node_answer_output;
+	node_rrf --> node_rerank;
+	node_search_embedding --> node_rrf;
+	node_search_embedding_hyde --> node_rrf;
+	node_web_search_mcp --> node_rrf;
+	node_answer_output --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

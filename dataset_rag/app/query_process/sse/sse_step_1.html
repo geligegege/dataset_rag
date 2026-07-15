@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE 步骤 1 · 基础流式</title>
+    <style>
+        :root {
+            --bg: #f8f9fb;
+            --surface: #fff;
+            --text: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --text-tertiary: #9a9ab0;
+            --brand: #4f46e5;
+            --border: #eaeaef;
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 680px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        }
+
+        .card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .card .sub {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .status.connected { background: #ecfdf5; color: #059669; }
+        .status.disconnected { background: #fef2f2; color: #dc2626; }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+
+        #result {
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            min-height: 120px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 13px;
+            font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #result:empty::after {
+            content: '等待接收消息…';
+            color: var(--text-tertiary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h3>📡 基础 SSE 流式接收</h3>
+        <p class="sub">连接到后端 SSE 接口，实时接收推送消息</p>
+        <div class="status connected" id="status">
+            <span class="status-dot"></span> 已连接
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const eventSource = new EventSource("http://127.0.0.1:8001/simple_stream");
+        const resultDom = document.getElementById("result");
+        const statusEl = document.getElementById("status");
+
+        eventSource.onmessage = function (event) {
+            resultDom.innerHTML += event.data + "\n";
+        };
+
+        eventSource.onopen = function () {
+            statusEl.className = 'status connected';
+            statusEl.innerHTML = '<span class="status-dot"></span> 已连接';
+        };
+
+        eventSource.onerror = function () {
+            statusEl.className = 'status disconnected';
+            statusEl.innerHTML = '<span class="status-dot"></span> 连接断开';
+        };
+    </script>
+</body>
+
+</html>
